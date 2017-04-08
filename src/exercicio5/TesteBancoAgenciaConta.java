@@ -9,42 +9,84 @@ import org.junit.Test;
 import br.ufsc.ine.leb.sistemaBancario.Agencia;
 import br.ufsc.ine.leb.sistemaBancario.Banco;
 import br.ufsc.ine.leb.sistemaBancario.Conta;
+import br.ufsc.ine.leb.sistemaBancario.Dinheiro;
+import br.ufsc.ine.leb.sistemaBancario.Entrada;
 import br.ufsc.ine.leb.sistemaBancario.Moeda;
+import br.ufsc.ine.leb.sistemaBancario.Saida;
 import br.ufsc.ine.leb.sistemaBancario.SistemaBancario;
+import br.ufsc.ine.leb.sistemaBancario.ValorMonetario;
 
 public class TesteBancoAgenciaConta {
 	
-	private Banco bancoDoBrasil;
-	private Agencia bancoDoBrasilTrindade;
+	private Banco bancoBrasil;
+	private Agencia bancoBrasilCentro;
 
-/*	
+	
 	@Before
 	public void configurar() {		
-		bancoDoBrasil = new SistemaBancario().criarBanco("Banco do Brasil", Moeda.BRL);
-		bancoDoBrasilTrindade = caixaEconomica.criarAgencia("Trindade");				
+		bancoBrasil = new SistemaBancario().criarBanco("Banco do Brasil", Moeda.BRL);
+		bancoBrasilCentro = bancoBrasil.criarAgencia("Centro");				
 	}
 
 	@Test
-	public void caixaEconomica() throws Exception {
-		assertEquals("Caixa Econômica", caixaEconomica.obterNome());
-		assertEquals(Moeda.BRL, caixaEconomica.obterMoeda());
+	public void bancoBrasil() throws Exception {
+		assertEquals("Banco do Brasil", bancoBrasil.obterNome());
+		assertEquals(Moeda.BRL, bancoBrasil.obterMoeda());
 	}
 
 	@Test
-	public void caixaEconomicaTrindade() throws Exception {
-		assertEquals("001", caixaEconomicaTrindade.obterIdentificador());
-		assertEquals("Trindade", caixaEconomicaTrindade.obterNome());
-		assertEquals(caixaEconomica, caixaEconomicaTrindade.obterBanco());
+	public void bancoBrasilCentro() throws Exception {
+		assertEquals("001", bancoBrasilCentro.obterIdentificador());
+		assertEquals("Centro", bancoBrasilCentro.obterNome());
+		assertEquals(bancoBrasil, bancoBrasilCentro.obterBanco());
 	}
 
 	@Test
-	public void joaoCaixaEconomicaTrindade() throws Exception {
-		Conta joaoCaixaEconomicaTrindade = caixaEconomicaTrindade.criarConta("João");
-		assertEquals("0001-4", joaoCaixaEconomicaTrindade.obterIdentificador());
-		assertEquals("João", joaoCaixaEconomicaTrindade.obterTitular());
-		assertTrue(joaoCaixaEconomicaTrindade.calcularSaldo().zero());
-		assertEquals(caixaEconomicaTrindade, joaoCaixaEconomicaTrindade.obterAgencia());
+	public void mariaBancoBrasilCentro() throws Exception {
+		Conta mariaBancoBrasilCentro = bancoBrasilCentro.criarConta("Maria");
+		assertEquals("0001-5", mariaBancoBrasilCentro.obterIdentificador());
+		assertEquals("Maria", mariaBancoBrasilCentro.obterTitular());
+		assertTrue(mariaBancoBrasilCentro.calcularSaldo().zero());
+		assertEquals(bancoBrasilCentro, mariaBancoBrasilCentro.obterAgencia());
 	}
-*/
+
+
+	@Test
+	public void mariaBancoBrasilCentroDeposito() throws Exception {
+		Conta mariaBancoBrasilCentro = bancoBrasilCentro.criarConta("Maria");
+		
+		Entrada deposito = new Entrada(mariaBancoBrasilCentro, new Dinheiro(Moeda.BRL, 10, 0)); 			
+		mariaBancoBrasilCentro.adicionarTransacao(deposito);
+		
+		ValorMonetario valorMonetario = new ValorMonetario(Moeda.BRL);
+		valorMonetario.somar(new Dinheiro(Moeda.BRL, 10, 0));
+
+		assertEquals("0001-5", mariaBancoBrasilCentro.obterIdentificador());
+		assertEquals("Maria", mariaBancoBrasilCentro.obterTitular());
+		assertEquals(valorMonetario, mariaBancoBrasilCentro.calcularSaldo());
+		assertEquals(bancoBrasilCentro, mariaBancoBrasilCentro.obterAgencia());
+	}
+	
+
+	@Test
+	public void mariaBancoBrasilCentroSaque() throws Exception {
+		Conta mariaBancoBrasilCentro = bancoBrasilCentro.criarConta("Maria");
+
+		Entrada deposito = new Entrada(mariaBancoBrasilCentro, new Dinheiro(Moeda.BRL, 10, 0)); 			
+		mariaBancoBrasilCentro.adicionarTransacao(deposito);		
+		
+		Saida saque = new Saida(mariaBancoBrasilCentro, new Dinheiro(Moeda.BRL, 6, 0));		 			
+		mariaBancoBrasilCentro.adicionarTransacao(saque);
+		
+		ValorMonetario valorMonetario = new ValorMonetario(Moeda.BRL);
+		valorMonetario.somar(new Dinheiro(Moeda.BRL, 4, 0));
+
+		assertEquals("0001-5", mariaBancoBrasilCentro.obterIdentificador());
+		assertEquals("Maria", mariaBancoBrasilCentro.obterTitular());
+		assertEquals(valorMonetario, mariaBancoBrasilCentro.calcularSaldo());
+		assertEquals(bancoBrasilCentro, mariaBancoBrasilCentro.obterAgencia());
+	}
+	
+	
 	
 }
