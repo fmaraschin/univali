@@ -11,7 +11,9 @@ import br.ufsc.ine.leb.sistemaBancario.Banco;
 import br.ufsc.ine.leb.sistemaBancario.Conta;
 import br.ufsc.ine.leb.sistemaBancario.Dinheiro;
 import br.ufsc.ine.leb.sistemaBancario.Entrada;
+import br.ufsc.ine.leb.sistemaBancario.EstadosDeOperacao;
 import br.ufsc.ine.leb.sistemaBancario.Moeda;
+import br.ufsc.ine.leb.sistemaBancario.Operacao;
 import br.ufsc.ine.leb.sistemaBancario.Saida;
 import br.ufsc.ine.leb.sistemaBancario.SistemaBancario;
 import br.ufsc.ine.leb.sistemaBancario.ValorMonetario;
@@ -83,13 +85,13 @@ public class TesteBancoAgenciaConta {
 	
 	@Test
 	public void mariaBancoBrasilCentroSaldoNegativo() throws Exception {
-		Conta mariaBancoBrasilCentro = bancoBrasilCentro.criarConta("Maria");
+		Conta mariaBancoBrasilCentro = bancoBrasilCentro.criarConta("Maria");	
 		
 		sistemaBancario.depositar(mariaBancoBrasilCentro, new Dinheiro(Moeda.BRL, 10, 0));
 		sistemaBancario.sacar(mariaBancoBrasilCentro, new Dinheiro(Moeda.BRL, 6, 0));		
-		
+			
 		if (!mariaBancoBrasilCentro.calcularSaldo().negativo()) 		
-			sistemaBancario.sacar(mariaBancoBrasilCentro, new Dinheiro(Moeda.BRL, 6, 0));
+			sistemaBancario.sacar(mariaBancoBrasilCentro, new Dinheiro(Moeda.BRL, 6, 0));		
 		
 		ValorMonetario valorMonetario = new ValorMonetario(Moeda.BRL);
 		valorMonetario.somar(new Dinheiro(Moeda.BRL, 4, 0));
